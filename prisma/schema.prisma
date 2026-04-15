@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+//TABLA PARA LOS USUARIOS
+model User {
+  id Int @id @default(autoincrement())
+  name String
+  email String @unique
+  password String
+  createdAt DateTime @default(now()) @map("created_at")
+}
+
+//TABLA PARA EL CATOLOGO ESPECIES
+model Species {
+  id Int @id @default(autoincrement())
+  commonName String @map("common_name")
+  scientificName String @map("scientific_name")
+  group String // Ej: Mamifero, Ave, Reptil
+  imageUrl String? @map("image_url")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // AQUI SE ESTABLE LA RELACION 1-N : Una especie - avistamientos
+  sightings Sighting[]
+
+  @@map("species") //SE ASIGNA AL MODELO UN NOMBRE DIFERENTE EN MYSQL
+}
+
+// TABLA PARA EL REGISTROS DE AVISTAMIENTOS DE FAUNA
+model Sighting {
+  id Int @id @default(autoincrement())
+  quantity Int @default(1)
+  latitude Float
+  longitude Float
+  observedAt DateTime @default(now()) @map("observed_at")
+  status String @default("vivo") // vivo, herido, muerto
+  notes String?
+  photoPath String? @map("photo_path")
+
+  // RELACION CON ESPECIES
+  species Species @relation(fields: [speciesId], references: [id])
+  speciesId Int @map("species_id")
+
+  @@map("sightings") //SE ASIGNA AL MODELO UN NOMBRE DIFERENTE EN MYSQL
+}
