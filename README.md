@@ -140,3 +140,5 @@ prisma/
 
 - El datasource Prisma esta configurado para MySQL.
 - La URL de base de datos se toma de `DATABASE_URL` en el archivo `.env`.
+
+## Autor : Ocampo Garcia Angel Fernando LITIID52
